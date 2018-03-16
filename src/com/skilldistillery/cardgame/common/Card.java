@@ -60,7 +60,6 @@ public class Card {
 		builder.append(rank);
 		builder.append(" of ");
 		builder.append(suit);
-		builder.append(".");
 		return builder.toString();
 	}
 

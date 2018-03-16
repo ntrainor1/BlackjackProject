@@ -9,16 +9,12 @@ import com.skilldistillery.cardgame.common.Deck;
 public class Hand {
 	List<Card> hand = new ArrayList<Card>();
 	
-	public Hand(List<Card> hand) {
+	public Hand() {
 		this.hand = hand;
 	}
 	
 	public void addCardToHand(Deck gameDeck) {
 		hand.add(gameDeck.dealCard());
-	}
-	
-	public List<Card> readHand() {
-		return hand;
 	}
 	
 	public int getValueHand() {
@@ -34,9 +30,11 @@ public class Hand {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Hand [hand=");
-		builder.append(hand);
-		builder.append("]");
+		builder.append("You have ");
+		for (Card card : hand) {
+			builder.append(card + " ");
+		}
+		builder.append("in your hand.");
 		return builder.toString();
 	}
 

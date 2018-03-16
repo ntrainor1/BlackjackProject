@@ -1,6 +1,5 @@
 package com.skilldistillery.cardgame.blackjack;
 
-public class Player {
-private String name;
-
+public interface Player {
+	public void hit();
 }
