@@ -10,9 +10,8 @@ public class Hand {
 	List<Card> hand = new ArrayList<Card>();
 	
 	public Hand() {
-		this.hand = hand;
 	}
-	
+
 	public void addCardToHand(Deck gameDeck) {
 		hand.add(gameDeck.dealCard());
 	}
@@ -30,11 +29,10 @@ public class Hand {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("You have ");
+		builder.append(" HAND:\t* ");
 		for (Card card : hand) {
-			builder.append(card + " ");
+			builder.append(card + " * ");
 		}
-		builder.append("in your hand.");
 		return builder.toString();
 	}
 
