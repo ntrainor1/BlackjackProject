@@ -13,7 +13,13 @@ public class Hand {
 	}
 
 	public void addCardToHand(Deck gameDeck) {
-		hand.add(gameDeck.dealCard());
+		hand.remove(gameDeck.dealCard());
+	}
+	
+	public void emptyHand() {
+		for (int i = 0; i < hand.size(); i++) {
+			hand.remove(i);
+		}
 	}
 	
 	public int getValueHand() {
