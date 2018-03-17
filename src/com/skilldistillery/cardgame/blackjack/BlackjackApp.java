@@ -35,7 +35,7 @@ public class BlackjackApp {
 
 		while (true) {
 			evaluateDeck();
-			
+
 			System.out.println();
 			System.out.println("Do you want to play again? (Y/N)");
 			char playAgain = kb.next().toUpperCase().charAt(0);
@@ -45,7 +45,7 @@ public class BlackjackApp {
 				dealerHand.emptyHand(dealerHand);
 				humanHand.emptyHand(humanHand);
 				dealer.gameDeck.shuffle();
-				
+
 				playerWins = 0;
 				dealerWins = 0;
 				newRound();
@@ -99,37 +99,37 @@ public class BlackjackApp {
 					break;
 				}
 				humanPlayer.hit(humanHand, gameDeck);
-				
+
 				if (dealer.gameDeck.checkDeckSize() == 0) {
 					break;
 				}
 				humanPlayer.hit(humanHand, gameDeck);
-				
+
 				if (dealer.gameDeck.checkDeckSize() == 0) {
 					break;
 				}
 				dealer.hit(dealerHand, gameDeck);
-				
+
 				if (dealer.gameDeck.checkDeckSize() == 0) {
 					break;
 				}
-				
+
 				break;
 			}
-			
+
 			System.out.println();
 			System.out.println(" ~~~ NEW ROUND ~~~");
 			System.out.println();
 			showHands();
-			
+
 			if (dealer.gameDeck.checkDeckSize() == 0) {
 				break;
 			}
-			
+
 			if (humanPlayer.humanHand.getValueHand() == 21) {
 				System.out.println("BLACKJACK!");
 				System.out.println("The player's hand hits 21 points and wins!");
-				
+
 				playerWins++;
 				dealerHand.emptyHand(dealerHand);
 				humanHand.emptyHand(humanHand);
@@ -151,13 +151,13 @@ public class BlackjackApp {
 				if (dealer.gameDeck.checkDeckSize() == 0) {
 					break;
 				}
-				
+
 				humanBust();
-				
+
 				if (humanPlayer.humanHand.getValueHand() > 21) {
 					break;
 				}
-				
+
 				if (humanPlayer.humanHand.cardList.size() == 2 && humanPlayer.humanHand.getValueHand() == 21) {
 					break;
 				}
@@ -174,8 +174,12 @@ public class BlackjackApp {
 					humanPlayer.hit(humanHand, gameDeck);
 					showHands();
 					humanBust();
-					
+
 					if (humanPlayer.humanHand.cardList.size() == 2 && humanPlayer.humanHand.getValueHand() > 21) {
+						break;
+					}
+
+					if (humanPlayer.humanHand.getValueHand() > 21) {
 						break;
 					}
 				}
@@ -241,10 +245,11 @@ public class BlackjackApp {
 				}
 
 			}
-			
+
 			if (dealer.gameDeck.checkDeckSize() == 0) {
 				break;
 			}
+
 		}
 
 	}
@@ -318,6 +323,7 @@ public class BlackjackApp {
 			}
 
 		}
+
 	}
 
 }
