@@ -7,26 +7,26 @@ import com.skilldistillery.cardgame.common.Card;
 import com.skilldistillery.cardgame.common.Deck;
 
 public class Hand {
-	List<Card> hand = new ArrayList<Card>();
+	List<Card> cardList = new ArrayList<Card>();
 	
 	public Hand() {
 	}
 
 	public void addCardToHand(Deck gameDeck) {
-		hand.add(gameDeck.dealCard());
+		cardList.add(gameDeck.dealCard());
 	}
 	
-	public void emptyHand() {
-		for (int i = 0; i < hand.size(); i++) {
-			hand.remove(i);
+	public void emptyHand(Hand hand) {
+		while (hand.cardList.size() > 0) {
+			hand.cardList.remove(0);
 		}
 	}
 	
 	public int getValueHand() {
 		int oldValue = 0;
 		
-		for (int i = 0; i < hand.size(); i++) {
-			oldValue = oldValue + hand.get(i).getValue();
+		for (int i = 0; i < cardList.size(); i++) {
+			oldValue = oldValue + cardList.get(i).getValue();
 		}
 		
 		return oldValue;
@@ -36,7 +36,7 @@ public class Hand {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(" HAND:\t* ");
-		for (Card card : hand) {
+		for (Card card : cardList) {
 			builder.append(card + " * ");
 		}
 		return builder.toString();
@@ -46,7 +46,7 @@ public class Hand {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((hand == null) ? 0 : hand.hashCode());
+		result = prime * result + ((cardList == null) ? 0 : cardList.hashCode());
 		return result;
 	}
 
@@ -59,11 +59,11 @@ public class Hand {
 		if (getClass() != obj.getClass())
 			return false;
 		Hand other = (Hand) obj;
-		if (hand == null) {
-			if (other.hand != null)
+		if (cardList == null) {
+			if (other.cardList != null)
 				return false;
 		}
-		else if (!hand.equals(other.hand))
+		else if (!cardList.equals(other.cardList))
 			return false;
 		return true;
 	}
