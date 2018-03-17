@@ -34,6 +34,8 @@ public class BlackjackApp {
 		newRound();
 
 		while (true) {
+			evaluateDeck();
+			
 			System.out.println();
 			System.out.println("Do you want to play again? (Y/N)");
 			char playAgain = kb.next().toUpperCase().charAt(0);
@@ -43,7 +45,10 @@ public class BlackjackApp {
 				dealerHand.emptyHand(dealerHand);
 				humanHand.emptyHand(humanHand);
 				dealer.gameDeck.shuffle();
-				setUp();
+				
+				playerWins = 0;
+				dealerWins = 0;
+				newRound();
 			}
 			else if (playAgain == 'N') {
 				System.out.println("Thanks for playing!");
@@ -89,41 +94,49 @@ public class BlackjackApp {
 
 	private void setUp() {
 		while (true) {
-			if (dealer.gameDeck.checkDeckSize() == 0) {
-				evaluateDeck();
+			while (true) {
+				if (dealer.gameDeck.checkDeckSize() == 0) {
+					break;
+				}
+				humanPlayer.hit(humanHand, gameDeck);
+				
+				if (dealer.gameDeck.checkDeckSize() == 0) {
+					break;
+				}
+				humanPlayer.hit(humanHand, gameDeck);
+				
+				if (dealer.gameDeck.checkDeckSize() == 0) {
+					break;
+				}
+				dealer.hit(dealerHand, gameDeck);
+				
+				if (dealer.gameDeck.checkDeckSize() == 0) {
+					break;
+				}
+				
 				break;
 			}
-
-			humanPlayer.hit(humanHand, gameDeck);
-
-			humanPlayer.hit(humanHand, gameDeck);
-
+			
+			System.out.println();
+			System.out.println(" ~~~ NEW ROUND ~~~");
+			System.out.println();
+			showHands();
+			
 			if (dealer.gameDeck.checkDeckSize() == 0) {
-				evaluateDeck();
 				break;
 			}
-			dealer.hit(dealerHand, gameDeck);
-
-			if (dealer.gameDeck.checkDeckSize() == 0) {
-				evaluateDeck();
+			
+			if (humanPlayer.humanHand.getValueHand() == 21) {
+				System.out.println("BLACKJACK!");
+				System.out.println("The player's hand hits 21 points and wins!");
+				
+				playerWins++;
+				dealerHand.emptyHand(dealerHand);
+				humanHand.emptyHand(humanHand);
+			}
+			else {
 				break;
 			}
-
-			break;
-		}
-
-		System.out.println();
-		System.out.println(" ~~~ NEW ROUND ~~~");
-		System.out.println();
-		showHands();
-
-		if (humanPlayer.humanHand.getValueHand() == 21) {
-			System.out.println("BLACKJACK!");
-			System.out.println("The player's hand hits 21 points and wins!");
-
-			playerWins++;
-			dealerHand.emptyHand(dealerHand);
-			humanHand.emptyHand(humanHand);
 		}
 
 	}
@@ -136,13 +149,16 @@ public class BlackjackApp {
 				}
 
 				if (dealer.gameDeck.checkDeckSize() == 0) {
-					evaluateDeck();
 					break;
 				}
 				
 				humanBust();
 				
 				if (humanPlayer.humanHand.getValueHand() > 21) {
+					break;
+				}
+				
+				if (humanPlayer.humanHand.cardList.size() == 2 && humanPlayer.humanHand.getValueHand() == 21) {
 					break;
 				}
 
@@ -152,7 +168,6 @@ public class BlackjackApp {
 
 				if (userAnswer == 'H') {
 					if (dealer.gameDeck.checkDeckSize() == 0) {
-						evaluateDeck();
 						break;
 					}
 
@@ -160,14 +175,13 @@ public class BlackjackApp {
 					showHands();
 					humanBust();
 					
-					if (humanPlayer.humanHand.getValueHand() > 21) {
+					if (humanPlayer.humanHand.cardList.size() == 2 && humanPlayer.humanHand.getValueHand() > 21) {
 						break;
 					}
 				}
 				else if (userAnswer == 'S') {
 					while (true) {
 						if (dealer.gameDeck.checkDeckSize() == 0) {
-							evaluateDeck();
 							break;
 						}
 
@@ -227,7 +241,10 @@ public class BlackjackApp {
 				}
 
 			}
-
+			
+			if (dealer.gameDeck.checkDeckSize() == 0) {
+				break;
+			}
 		}
 
 	}
@@ -267,7 +284,6 @@ public class BlackjackApp {
 
 			while (dealer.dealerHand.getValueHand() < 17) {
 				if (dealer.gameDeck.checkDeckSize() == 0) {
-					evaluateDeck();
 					break;
 				}
 
