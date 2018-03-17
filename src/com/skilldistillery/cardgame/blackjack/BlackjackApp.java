@@ -42,6 +42,7 @@ public class BlackjackApp {
 				gameDeck.resetDeck(gameDeck);
 				dealerHand.emptyHand(dealerHand);
 				humanHand.emptyHand(humanHand);
+				dealer.gameDeck.shuffle();
 				setUp();
 			}
 			else if (playAgain == 'N') {
@@ -87,23 +88,25 @@ public class BlackjackApp {
 	}
 
 	private void setUp() {
-		if (dealer.gameDeck.checkDeckSize() == 0) {
-			evaluateDeck();
-		}
-
-		humanPlayer.hit(humanHand, gameDeck);
-		if (dealer.gameDeck.checkDeckSize() == 0) {
-			evaluateDeck();
-		}
-
-		humanPlayer.hit(humanHand, gameDeck);
-		if (dealer.gameDeck.checkDeckSize() == 0) {
-			evaluateDeck();
-		}
-
-		dealer.hit(dealerHand, gameDeck);
-		if (dealer.gameDeck.checkDeckSize() == 0) {
-			evaluateDeck();
+		while (true) {
+			humanPlayer.hit(humanHand, gameDeck);
+			
+			if (dealer.gameDeck.checkDeckSize() == 0) {
+				evaluateDeck();
+				break;
+			}
+			humanPlayer.hit(humanHand, gameDeck);
+			
+			if (dealer.gameDeck.checkDeckSize() == 0) {
+				evaluateDeck();
+				break;
+			}
+			dealer.hit(dealerHand, gameDeck);
+			
+			if (dealer.gameDeck.checkDeckSize() == 0) {
+				evaluateDeck();
+				break;
+			}
 		}
 
 		showHands();
@@ -121,41 +124,90 @@ public class BlackjackApp {
 
 	private void newRound() {
 		while (true) {
-			setUp();
-
-			if (dealer.gameDeck.checkDeckSize() == 0) {
-				evaluateDeck();
-				break;
-			}
-
-			System.out.println("DO YOU WANT TO HIT OR STAY? (H/S)");
-			char userAnswer = kb.next().toUpperCase().charAt(0);
-			System.out.println();
-
-			if (userAnswer == 'H') {
-				humanPlayer.hit(humanHand, gameDeck);
-				showHands();
-
-				if (humanPlayer.humanHand.getValueHand() > 21) {
-					System.out.println(
-							"The player's hand exceeds 21 points, but the dealer must draw until reaching 17 points.");
-
+			while (true) {
+				if (dealer.dealerHand.cardList.size() == 0) {
+					setUp();
+				}
+				
+				if (dealer.gameDeck.checkDeckSize() == 0) {
+					evaluateDeck();
+					break;
+				}
+				
+				System.out.println("DO YOU WANT TO HIT OR STAY? (H/S)");
+				char userAnswer = kb.next().toUpperCase().charAt(0);
+				System.out.println();
+				
+				if (userAnswer == 'H') {
+					if (dealer.gameDeck.checkDeckSize() == 0) {
+						evaluateDeck();
+						break;
+					}
+					
+					humanPlayer.hit(humanHand, gameDeck);
+					showHands();
+					
+					if (humanPlayer.humanHand.getValueHand() > 21) {
+						System.out.println(
+								"The player's hand exceeds 21 points, but the dealer must draw until reaching 17 points.");
+						
+						while (dealer.dealerHand.getValueHand() < 17) {
+							if (dealer.gameDeck.checkDeckSize() == 0) {
+								evaluateDeck();
+								break;
+							}
+							
+							dealer.hit(dealerHand, gameDeck);
+							showHands();
+							
+							if (dealer.dealerHand.getValueHand() > 21) {
+								System.out.println("The dealer's hand also exceeds 21 points and no one wins.");
+								dealerHand.emptyHand(dealerHand);
+								humanHand.emptyHand(humanHand);
+								break;
+							}
+							
+							if (dealer.dealerHand.cardList.size() == 2 && dealer.dealerHand.getValueHand() == 21) {
+								System.out.println("BLACKJACK!");
+								System.out.println("The dealer's hand hits 21 points and wins!");
+								dealerWins++;
+								dealerHand.emptyHand(dealerHand);
+								humanHand.emptyHand(humanHand);
+								break;
+							}
+							
+							if (dealer.dealerHand.getValueHand() >= 17) {
+								System.out.println("The dealer's hand exceeds 17 but does not exceed 21 points.");
+								System.out.println("The dealer wins, because the player busted.");
+								dealerWins++;
+								dealerHand.emptyHand(dealerHand);
+								humanHand.emptyHand(humanHand);
+								break;
+							}
+							
+						}
+						
+					}
+					
+				}
+				else if (userAnswer == 'S') {
 					while (true) {
 						if (dealer.gameDeck.checkDeckSize() == 0) {
 							evaluateDeck();
 							break;
 						}
-
+						
 						dealer.hit(dealerHand, gameDeck);
 						showHands();
-
+						
 						if (dealer.dealerHand.getValueHand() > 21) {
-							System.out.println("The dealer's hand also exceeds 21 points and no one wins.");
+							System.out.println("The dealer's hand exceeds 21 points and the player wins.");
+							playerWins++;
 							dealerHand.emptyHand(dealerHand);
 							humanHand.emptyHand(humanHand);
 							break;
 						}
-
+						
 						if (dealer.dealerHand.cardList.size() == 2 && dealer.dealerHand.getValueHand() == 21) {
 							System.out.println("BLACKJACK!");
 							System.out.println("The dealer's hand hits 21 points and wins!");
@@ -164,7 +216,7 @@ public class BlackjackApp {
 							humanHand.emptyHand(humanHand);
 							break;
 						}
-
+						
 						if (dealer.dealerHand.getValueHand() >= 17
 								&& dealer.dealerHand.getValueHand() > humanPlayer.humanHand.getValueHand()) {
 							System.out.println("The dealer's hand exceeds the player's but does not exceed 21 points.");
@@ -174,7 +226,17 @@ public class BlackjackApp {
 							humanHand.emptyHand(humanHand);
 							break;
 						}
-
+						
+						if (dealer.dealerHand.getValueHand() >= 17
+								&& dealer.dealerHand.getValueHand() < humanPlayer.humanHand.getValueHand()) {
+							System.out.println("The player's hand exceeds the dealer's but does not exceed 21 points.");
+							System.out.println("The player wins.");
+							playerWins++;
+							dealerHand.emptyHand(dealerHand);
+							humanHand.emptyHand(humanHand);
+							break;
+						}
+						
 						if (dealer.dealerHand.getValueHand() >= 17
 								&& dealer.dealerHand.getValueHand() == humanPlayer.humanHand.getValueHand()) {
 							System.out.println("The player and the dealer tie but do not exceed 21 points.");
@@ -183,69 +245,20 @@ public class BlackjackApp {
 							humanHand.emptyHand(humanHand);
 							break;
 						}
-
+						
 					}
-
+					
+					break;
+					
 				}
-
+				
 			}
-			else if (userAnswer == 'S') {
-				while (true) {
-					if (dealer.gameDeck.checkDeckSize() == 0) {
-						evaluateDeck();
-						break;
-					}
-
-					dealer.hit(dealerHand, gameDeck);
-					showHands();
-
-					if (dealer.dealerHand.getValueHand() > 21) {
-						System.out.println("The dealer's hand exceeds 21 points and the player wins.");
-						playerWins++;
-						dealerHand.emptyHand(dealerHand);
-						humanHand.emptyHand(humanHand);
-						break;
-					}
-
-					if (dealer.dealerHand.cardList.size() == 2 && dealer.dealerHand.getValueHand() == 21) {
-						System.out.println("BLACKJACK!");
-						System.out.println("The dealer's hand hits 21 points and wins!");
-						dealerWins++;
-						dealerHand.emptyHand(dealerHand);
-						humanHand.emptyHand(humanHand);
-						break;
-					}
-
-					if (dealer.dealerHand.getValueHand() > humanPlayer.humanHand.getValueHand()) {
-						System.out.println("The dealer's hand exceeds the player's but does not exceed 21 points.");
-						System.out.println("The dealer wins.");
-						dealerWins++;
-						dealerHand.emptyHand(dealerHand);
-						humanHand.emptyHand(humanHand);
-						break;
-					}
-
-					if (dealer.dealerHand.getValueHand() >= 17
-							&& dealer.dealerHand.getValueHand() < humanPlayer.humanHand.getValueHand()) {
-						System.out.println("The player's hand exceeds the dealer's but does not exceed 21 points.");
-						System.out.println("The player wins.");
-						playerWins++;
-						dealerHand.emptyHand(dealerHand);
-						humanHand.emptyHand(humanHand);
-						break;
-					}
-
-				}
-
-				break;
-
-			}
-
+			
+			System.out.println();
+			System.out.println(" ~~~ NEW ROUND ~~~");
+			System.out.println();
 		}
-
-		System.out.println();
-		System.out.println(" ~~~ NEW ROUND ~~~");
-		System.out.println();
+		
 	}
 
 	private void showHands() {
