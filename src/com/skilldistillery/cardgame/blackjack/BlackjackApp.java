@@ -189,6 +189,7 @@ public class BlackjackApp {
 				else if (userAnswer == 'S') {
 					while (true) {
 						dealer.dealerHand.cardList.add(dealer2ndCard);
+						showHands();
 
 						if (dealer.dealerHand.getValueHand() > 21) {
 							System.out.println("The dealer's hand exceeds 21 points and the player wins.");
@@ -293,6 +294,7 @@ public class BlackjackApp {
 
 			while (dealer.dealerHand.getValueHand() < 17) {
 				dealer.dealerHand.cardList.add(dealer2ndCard);
+				showHands();
 
 				if (dealer.dealerHand.getValueHand() > 21) {
 					System.out.println("The dealer's hand also exceeds 21 points and no one wins.");
