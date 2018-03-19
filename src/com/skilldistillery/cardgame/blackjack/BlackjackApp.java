@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+import com.skilldistillery.cardgame.common.Card;
 import com.skilldistillery.cardgame.common.Deck;
 
 public class BlackjackApp {
@@ -20,6 +21,7 @@ public class BlackjackApp {
 	private Scanner kb = new Scanner(System.in);
 	private String humanName = "";
 	private int humanScore = 0;
+	private Card dealer2ndCard;
 
 	public static void main(String[] args) {
 		BlackjackApp cga = new BlackjackApp();
@@ -113,6 +115,7 @@ public class BlackjackApp {
 				if (dealer.gameDeck.checkDeckSize() == 0) {
 					break;
 				}
+				dealer2ndCard = gameDeck.dealCard();
 
 				break;
 			}
@@ -185,12 +188,7 @@ public class BlackjackApp {
 				}
 				else if (userAnswer == 'S') {
 					while (true) {
-						if (dealer.gameDeck.checkDeckSize() == 0) {
-							break;
-						}
-
-						dealer.hit(dealerHand, gameDeck);
-						showHands();
+						dealer.dealerHand.cardList.add(dealer2ndCard);
 
 						if (dealer.dealerHand.getValueHand() > 21) {
 							System.out.println("The dealer's hand exceeds 21 points and the player wins.");
@@ -237,7 +235,13 @@ public class BlackjackApp {
 							humanHand.emptyHand(humanHand);
 							break;
 						}
+						
+						if (dealer.gameDeck.checkDeckSize() == 0) {
+							break;
+						}
 
+						dealer.hit(dealerHand, gameDeck);
+						showHands();
 					}
 
 					break;
@@ -288,12 +292,7 @@ public class BlackjackApp {
 					.println("The player's hand exceeds 21 points, but the dealer must draw until reaching 17 points.");
 
 			while (dealer.dealerHand.getValueHand() < 17) {
-				if (dealer.gameDeck.checkDeckSize() == 0) {
-					break;
-				}
-
-				dealer.hit(dealerHand, gameDeck);
-				showHands();
+				dealer.dealerHand.cardList.add(dealer2ndCard);
 
 				if (dealer.dealerHand.getValueHand() > 21) {
 					System.out.println("The dealer's hand also exceeds 21 points and no one wins.");
@@ -319,7 +318,13 @@ public class BlackjackApp {
 					humanHand.emptyHand(humanHand);
 					break;
 				}
-
+				
+				if (dealer.gameDeck.checkDeckSize() == 0) {
+					break;
+				}
+				
+				dealer.hit(dealerHand, gameDeck);
+				showHands();
 			}
 
 		}
