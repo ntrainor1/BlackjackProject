@@ -133,6 +133,12 @@ public class BlackjackApp {
 				System.out.println("BLACKJACK!");
 				System.out.println("The player's hand hits 21 points and wins!");
 
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
 				playerWins++;
 				dealerHand.emptyHand(dealerHand);
 				humanHand.emptyHand(humanHand);
@@ -178,21 +184,26 @@ public class BlackjackApp {
 					showHands();
 					humanBust();
 
-					if (humanPlayer.humanHand.cardList.size() == 2 && humanPlayer.humanHand.getValueHand() > 21) {
-						break;
-					}
-
 					if (humanPlayer.humanHand.getValueHand() > 21) {
 						break;
 					}
 				}
 				else if (userAnswer == 'S') {
+					// Fix this statement, it's adding an additional card each round!
+					dealer.dealerHand.cardList.add(dealer2ndCard);
+					showHands();
+					
+					// Maybe by putting it outside the infinite loop, we won't run into this issue! 
 					while (true) {
-						dealer.dealerHand.cardList.add(dealer2ndCard);
-						showHands();
-
 						if (dealer.dealerHand.getValueHand() > 21) {
 							System.out.println("The dealer's hand exceeds 21 points and the player wins.");
+							
+							try {
+								Thread.sleep(3000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							
 							playerWins++;
 							dealerHand.emptyHand(dealerHand);
 							humanHand.emptyHand(humanHand);
@@ -202,6 +213,13 @@ public class BlackjackApp {
 						if (dealer.dealerHand.cardList.size() == 2 && dealer.dealerHand.getValueHand() == 21) {
 							System.out.println("BLACKJACK!");
 							System.out.println("The dealer's hand hits 21 points and wins!");
+							
+							try {
+								Thread.sleep(3000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							
 							dealerWins++;
 							dealerHand.emptyHand(dealerHand);
 							humanHand.emptyHand(humanHand);
@@ -212,6 +230,13 @@ public class BlackjackApp {
 								&& dealer.dealerHand.getValueHand() > humanPlayer.humanHand.getValueHand()) {
 							System.out.println("The dealer's hand exceeds the player's but does not exceed 21 points.");
 							System.out.println("The dealer wins.");
+							
+							try {
+								Thread.sleep(3000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							
 							dealerWins++;
 							dealerHand.emptyHand(dealerHand);
 							humanHand.emptyHand(humanHand);
@@ -222,6 +247,13 @@ public class BlackjackApp {
 								&& dealer.dealerHand.getValueHand() < humanPlayer.humanHand.getValueHand()) {
 							System.out.println("The player's hand exceeds the dealer's but does not exceed 21 points.");
 							System.out.println("The player wins.");
+							
+							try {
+								Thread.sleep(3000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							
 							playerWins++;
 							dealerHand.emptyHand(dealerHand);
 							humanHand.emptyHand(humanHand);
@@ -232,6 +264,13 @@ public class BlackjackApp {
 								&& dealer.dealerHand.getValueHand() == humanPlayer.humanHand.getValueHand()) {
 							System.out.println("The player and the dealer tie but do not exceed 21 points.");
 							System.out.println("No one wins.");
+							
+							try {
+								Thread.sleep(3000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							
 							dealerHand.emptyHand(dealerHand);
 							humanHand.emptyHand(humanHand);
 							break;
@@ -272,6 +311,13 @@ public class BlackjackApp {
 
 	private void evaluateDeck() {
 		System.out.println("The deck is empty and the game ends.");
+		
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		evaluateWinner();
 	}
 
@@ -289,15 +335,28 @@ public class BlackjackApp {
 
 	private void humanBust() {
 		if (humanPlayer.humanHand.getValueHand() > 21) {
-			System.out
-					.println("The player's hand exceeds 21 points, but the dealer must draw until reaching 17 points.");
+			System.out.println("The player's hand exceeds 21 points, but the dealer must draw until reaching 17 points.");
 
-			while (dealer.dealerHand.getValueHand() < 17) {
-				dealer.dealerHand.cardList.add(dealer2ndCard);
-				showHands();
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			dealer.dealerHand.cardList.add(dealer2ndCard);
+			showHands();
+
+			while (true) {
 
 				if (dealer.dealerHand.getValueHand() > 21) {
 					System.out.println("The dealer's hand also exceeds 21 points and no one wins.");
+					
+					try {
+						Thread.sleep(3000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					
 					dealerHand.emptyHand(dealerHand);
 					humanHand.emptyHand(humanHand);
 					break;
@@ -307,6 +366,13 @@ public class BlackjackApp {
 					System.out.println("BLACKJACK!");
 					System.out.println("The dealer's hand hits 21 points and wins!");
 					dealerWins++;
+					
+					try {
+						Thread.sleep(3000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					
 					dealerHand.emptyHand(dealerHand);
 					humanHand.emptyHand(humanHand);
 					break;
@@ -315,6 +381,13 @@ public class BlackjackApp {
 				if (dealer.dealerHand.getValueHand() >= 17) {
 					System.out.println("The dealer's hand exceeds 17 but does not exceed 21 points.");
 					System.out.println("The dealer wins, because the player busted.");
+					
+					try {
+						Thread.sleep(3000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					
 					dealerWins++;
 					dealerHand.emptyHand(dealerHand);
 					humanHand.emptyHand(humanHand);
